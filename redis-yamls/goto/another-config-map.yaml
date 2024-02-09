@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: redis-init-script
+  namespace: demo
+data:
+  create.sh: |
+
+
+    redis-cli set apps code
+    redis-cli set hello world 
+
+
+    redis-cli ACL SETUSER shaad on ">1234" +@read ~* 
+    redis-cli ACL SETUSER abdullah on ">5678"

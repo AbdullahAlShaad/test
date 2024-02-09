@@ -1,0 +1,55 @@
+apiVersion: kubedb.com/v1alpha2
+kind: Redis
+metadata:
+  name: redis-cluster
+  namespace: demo
+spec:
+  disableAuth: false
+  version: 7.2.3
+  mode: Cluster
+  cluster:
+    master: 3
+    replicas: 1 
+  storageType: Durable
+  storage:
+    resources:
+      requests:
+        storage: "100Mi"
+    storageClassName: "standard"
+    accessModes:
+    - ReadWriteOnce
+  podTemplate:
+    spec:
+      resources:
+        requests:
+          cpu: "100m"
+          memory: "100Mi"
+  # init:
+  #   script:
+  #     configMap:
+  #       name: redis-init-script
+  #       #defaultMode: 0755
+
+
+
+  init:
+    script:
+      projected:
+        sources:
+        - secret:
+            name: rd-auth1
+            items:
+              - key: username
+                path: auth/1/username
+              - key: password
+                path: auth/1/password
+        - secret:
+            name: rd-auth2
+            items:
+              - key: username
+                path: auth/2/username
+        - configMap:
+            name: redis-init-script
+
+  terminationPolicy: WipeOut
+  

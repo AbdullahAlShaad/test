@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: redis-init-script
+  namespace: demo
+data:
+  script.sh: |
+
+    user1=$(cat auth/1/username)
+    pass1=$(cat auth/1/password)
+
+
+    redis-cli set apps code
+    redis-cli set hello world 
+
+
+    redis-cli ACL SETUSER "${user1}" on ">${pass1}" +@read ~* 
+    redis-cli ACL SETUSER abdullah on ">5678"

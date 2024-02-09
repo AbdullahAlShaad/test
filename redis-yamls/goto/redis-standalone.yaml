@@ -1,0 +1,26 @@
+apiVersion: kubedb.com/v1alpha2
+kind: Redis
+metadata:
+  name: standalone-redis
+  namespace: demo
+spec:
+  #authSecret:
+    #name: mysecret
+      #externallyManaged: true
+  version: 7.2.3
+  disableAuth: false
+  storageType: Durable
+  storage:
+    storageClassName: "standard"
+    accessModes:
+    - ReadWriteOnce
+    resources:
+      requests:
+        storage: 1Gi
+  init:
+    script:
+      configMap:
+        name: redis-init-script
+        
+  terminationPolicy: WipeOut
+
